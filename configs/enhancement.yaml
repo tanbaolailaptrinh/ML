@@ -1,0 +1,7 @@
+name: deepfilternet
+
+params:
+  # auto selects CUDA when available, otherwise CPU.
+  device: auto
+  # None lets the model suppress noise without a fixed attenuation cap.
+  attenuation_limit_db: null

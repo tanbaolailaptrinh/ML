@@ -13,8 +13,10 @@ components:
       source_count: 1
 
   enhancement:
-    name: mock
-    params: {}
+    name: deepfilternet
+    params:
+      device: auto
+      attenuation_limit_db: null
 
   asr:
     name: phowhisper

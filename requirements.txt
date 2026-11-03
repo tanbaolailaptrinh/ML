@@ -6,3 +6,4 @@ torch
 transformers
 gradio>=5.0,<7.0
 vieneu==3.8.3
+deepfilternet>=0.5.6
