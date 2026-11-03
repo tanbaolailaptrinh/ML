@@ -37,13 +37,24 @@ class DeepFilterNetEnhancer(SpeechEnhancer):
         if attenuation_limit_db is not None and attenuation_limit_db < 0:
             raise ValueError("attenuation_limit_db must be non-negative or None")
 
-        selected_device = "cuda" if device == "auto" and torch.cuda.is_available() else device
-        if selected_device == "auto":
-            selected_device = "cpu"
+        selected_device = (
+            "cuda" if device == "auto" and torch.cuda.is_available()
+            else "cpu" if device == "auto"
+            else device
+        )
+        # DeepFilterNet selects the device used by enhance() through this
+        # environment variable in df.modules.get_device(). Set it before init_df.
+        import os
+
+        os.environ["DF_DEVICE"] = selected_device
         options: dict[str, object] = {}
         if model_base_dir:
             options["model_base_dir"] = model_base_dir
-        self.model, self.df_state, _ = init_df(**options)
+        initialized = init_df(**options)
+        if len(initialized) == 4:
+            self.model, self.df_state, _, _ = initialized
+        else:
+            self.model, self.df_state, _ = initialized
         self.model.to(selected_device)
         self.model.eval()
         self.sample_rate = int(self.df_state.sr())
