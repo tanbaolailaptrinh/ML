@@ -220,6 +220,16 @@ python -m src.tts.infer --text "Thủ đô của Hàn Quốc là Seoul."
 
 File kết quả mặc định: `outputs/audio/tts_sample.wav`. Có thể thêm `--output path/to/file.wav` hoặc đổi giọng trong `configs/tts.yaml`. VieNeu dùng CPU/ONNX để dành GPU cho ASR và QA.
 
+### Module Speech Enhancement (DeepFilterNet)
+
+Module khử nhiễu dùng pretrained DeepFilterNet. Cài dependency bằng `pip install -r requirements.txt`, sau đó chạy:
+
+```bash
+python -m src.enhancement.infer --input path/to/noisy.wav --output outputs/audio/enhanced.wav
+```
+
+Cấu hình độc lập nằm ở `configs/enhancement.yaml`. Pipeline end-to-end cũng bật DeepFilterNet trong `configs/pipeline.yaml`; model xử lý ở sample rate nội bộ rồi trả audio về sample rate ban đầu để tương thích với ASR.
+
 ---
 
 ## 7. Hướng Dẫn Chạy Pipeline End-to-End
@@ -281,3 +291,4 @@ pytest -q
 2. **Khử ghép nối (Decoupling)**: Pipeline tổng không gọi trực tiếp model cụ thể nào mà điều phối thông qua interface `base.py` và `factory.py`.
 3. **Cấu hình hóa qua YAML**: Mọi thay đổi về lựa chọn model, thiết bị tính toán (CPU/CUDA), checkpoint hoặc tham số đều được điều khiển qua thư mục `configs/`, không can thiệp vào mã nguồn.
 4. **Tách biệt tầng ứng dụng**: Giao diện người dùng (`app/`) chỉ tương tác với `pipeline.run(audio)` hoặc `pipeline.stream(audio)`, không gọi trực tiếp các mô hình ML bên dưới.
+"# ML" 
